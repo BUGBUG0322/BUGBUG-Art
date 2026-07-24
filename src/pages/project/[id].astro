@@ -101,7 +101,8 @@ const nextWork = works[(safeIndex + 1) % works.length];
   </head>
   <body class="min-h-screen w-full relative select-none md:overflow-hidden bg-white">
     
-    <header class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
+    <!-- 1. 頂部 / 左側固定選單 -->
+    <header class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-6 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
       <div class="pointer-events-auto flex items-center md:block gap-2">
         <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity">
           BUGBUG
@@ -118,22 +119,25 @@ const nextWork = works[(safeIndex + 1) % works.length];
       </div>
     </header>
 
+    <!-- 2. 中央畫布：垂直置中、大圖大影片展示 -->
     <main 
       id="project-canvas"
-      class="w-full pt-16 pb-24 px-4 md:p-0 md:h-full md:overflow-y-hidden md:overflow-x-scroll flex flex-col md:flex-row items-center md:pl-64 md:pr-[35vw] gap-8 md:gap-24"
+      class="w-full min-h-screen md:h-full pt-20 pb-24 md:p-0 md:overflow-y-hidden md:overflow-x-scroll flex flex-col md:flex-row items-center justify-start md:justify-start md:pl-72 md:pr-[30vw] gap-12 md:gap-28"
     >
       
+      <!-- [區塊 A] Hero 大圖（加大滿版） -->
       <section class="project-sec w-full md:w-auto shrink-0 flex items-center justify-center my-auto">
         <img 
           src={work.image} 
           alt={work.title}
           transition:name={`work-img-${work.id}`}
-          class="w-full max-h-[60vh] md:max-h-[80vh] md:max-w-[70vw] object-contain shadow-xl rounded-sm block"
+          class="w-full max-h-[75vh] md:max-h-[85vh] md:max-w-[75vw] object-contain shadow-2xl rounded-sm block"
         />
       </section>
 
+      <!-- [區塊 B] 影片播放區塊（放大置中） -->
       {work.video && (
-        <section class="project-sec w-full md:w-[60vw] md:max-w-4xl shrink-0 h-[35vh] md:h-[70vh] flex items-center justify-center bg-black/5 rounded-sm overflow-hidden shadow-xl border border-zinc-100">
+        <section class="project-sec w-full md:w-[65vw] md:max-w-5xl shrink-0 h-[45vh] md:h-[75vh] flex items-center justify-center bg-black/5 rounded-sm overflow-hidden shadow-2xl border border-zinc-100 my-auto">
           <video 
             src={work.video} 
             autoplay 
@@ -147,15 +151,16 @@ const nextWork = works[(safeIndex + 1) % works.length];
         </section>
       )}
 
-      <section class="project-sec w-full md:w-80 shrink-0 border-t md:border-t-0 md:border-l border-zinc-100 pt-6 md:pt-0 md:pl-12 py-0 md:py-6 my-auto flex flex-col justify-between md:h-[65vh]">
-        <div class="space-y-3 md:space-y-4">
+      <!-- [區塊 C] Credit 署名區塊 -->
+      <section class="project-sec w-full md:w-80 shrink-0 border-t md:border-t-0 md:border-l border-zinc-100 pt-8 md:pt-0 md:pl-16 my-auto flex flex-col justify-center gap-8 md:h-[60vh]">
+        <div class="space-y-3">
           <span class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 block">Description</span>
           <p class="text-xs tracking-wider text-zinc-600 leading-relaxed font-light">
             {work.desc}
           </p>
         </div>
 
-        <div class="space-y-4 md:space-y-6 pt-6 md:pt-12 border-t border-zinc-100 mt-6 md:mt-0">
+        <div class="space-y-4 pt-6 border-t border-zinc-100">
           <div>
             <p class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 mb-1">{work.role || "Illustrator"}</p>
             <p class="text-xs tracking-widest uppercase font-medium text-zinc-900">{work.credit}</p>
@@ -169,7 +174,8 @@ const nextWork = works[(safeIndex + 1) % works.length];
 
     </main>
 
-    <footer class="fixed bottom-4 left-1/2 -translate-x-1/2 md:left-auto md:right-12 md:translate-x-0 z-40 text-[10px] tracking-widest uppercase text-zinc-400 flex gap-6 pointer-events-auto bg-white/90 backdrop-blur-md px-6 py-2 rounded-full border border-zinc-200/60 shadow-md">
+    <!-- 3. 底部控制項 -->
+    <footer class="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:right-12 md:translate-x-0 z-40 text-[10px] tracking-widest uppercase text-zinc-400 flex gap-6 pointer-events-auto bg-white/90 backdrop-blur-md px-6 py-2.5 rounded-full border border-zinc-200/60 shadow-md">
       <a href={`/project/${prevWork.id}`} class="hover:text-zinc-900 transition-colors">
         Prev
       </a>
@@ -191,79 +197,78 @@ const nextWork = works[(safeIndex + 1) % works.length];
       }
     </style>
 
+    <!-- 4. 影片自動重新加載 & 桌面磁吸滾動 -->
     <script>
-  function setupCanvas() {
-    const canvas = document.getElementById('project-canvas');
-    if (!canvas) return;
+      function handleVideoPlay() {
+        const canvas = document.getElementById('project-canvas');
+        if (!canvas) return;
 
-    // 1. 抓取頁面中的 video 標籤，強制 load & play
-    const video = canvas.querySelector('video');
-    if (video) {
-      video.muted = true; // 確保靜音，瀏覽器才允許自動播放
-      video.load();       // 👈 強制重新載入影片資源
-      
-      // 嘗試自動播放
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // 如果被自動播放政策擋住，靜音後再試一次
-          video.muted = true;
-          video.play().catch(() => {});
-        });
-      }
-    }
-
-    // 2. 電腦版橫向滾動與磁吸邏輯
-    if (window.innerWidth < 768) return;
-
-    let snapTimeout: number | undefined;
-
-    function snapToCenter() {
-      if (!canvas || window.innerWidth < 768) return;
-      const viewportCenter = window.innerWidth / 2;
-      const sections = canvas.querySelectorAll('.project-sec');
-      let closestSection: HTMLElement | null = null;
-      let minDistance = Infinity;
-
-      sections.forEach(sec => {
-        const el = sec as HTMLElement;
-        const rect = el.getBoundingClientRect();
-        const sectionCenter = rect.left + rect.width / 2;
-        const dist = Math.abs(sectionCenter - viewportCenter);
-
-        if (dist < minDistance) {
-          minDistance = dist;
-          closestSection = el;
-        }
-      });
-
-      if (closestSection) {
-        const rect = (closestSection as HTMLElement).getBoundingClientRect();
-        const targetOffset = canvas.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
+        const videos = canvas.querySelectorAll('video');
         
-        canvas.scrollTo({
-          left: Math.max(0, targetOffset),
-          behavior: 'smooth'
+        videos.forEach((video) => {
+          video.muted = true;
+          video.playsInline = true;
+          video.load();
+
+          const playVideo = () => {
+            video.play().catch(() => {});
+          };
+
+          if (video.readyState >= 2) {
+            playVideo();
+          } else {
+            video.addEventListener('canplay', playVideo, { once: true });
+          }
         });
+
+        if (window.innerWidth >= 768) {
+          let snapTimeout: number | undefined;
+
+          const snapToCenter = () => {
+            if (!canvas || window.innerWidth < 768) return;
+            const viewportCenter = window.innerWidth / 2;
+            const sections = canvas.querySelectorAll('.project-sec');
+            let closestSection: HTMLElement | null = null;
+            let minDistance = Infinity;
+
+            sections.forEach(sec => {
+              const el = sec as HTMLElement;
+              const rect = el.getBoundingClientRect();
+              const sectionCenter = rect.left + rect.width / 2;
+              const dist = Math.abs(sectionCenter - viewportCenter);
+
+              if (dist < minDistance) {
+                minDistance = dist;
+                closestSection = el;
+              }
+            });
+
+            if (closestSection) {
+              const rect = (closestSection as HTMLElement).getBoundingClientRect();
+              const targetOffset = canvas.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
+              
+              canvas.scrollTo({
+                left: Math.max(0, targetOffset),
+                behavior: 'smooth'
+              });
+            }
+          };
+
+          window.addEventListener('wheel', (e) => {
+            if (!canvas || window.innerWidth < 768) return;
+            const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+            if (delta === 0) return;
+
+            canvas.scrollLeft += delta * 1.5;
+            clearTimeout(snapTimeout);
+            snapTimeout = window.setTimeout(snapToCenter, 350);
+          }, { passive: true });
+        }
       }
-    }
 
-    window.addEventListener('wheel', (e) => {
-      if (!canvas || window.innerWidth < 768) return;
-      
-      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      if (delta === 0) return;
-
-      canvas.scrollLeft += delta * 1.5;
-
-      clearTimeout(snapTimeout);
-      snapTimeout = window.setTimeout(snapToCenter, 350);
-    }, { passive: true });
-  }
-
-  // 監聽 Astro 的頁面載入與轉場事件
-  document.addEventListener('astro:page-load', setupCanvas);
-</script>
+      document.addEventListener('astro:page-load', handleVideoPlay);
+      document.addEventListener('astro:after-swap', handleVideoPlay);
+    </script>
 
   </body>
 </html>
