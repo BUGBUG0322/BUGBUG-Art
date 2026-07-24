@@ -7,7 +7,7 @@ export const works = [
   {
     id: "show",
     title: "2how",
-    category: "Illustration", // 👈 已更新為 Illustration
+    category: "Illustration",
     year: "2025",
     image: "/images/2how.png",
     desc: "1999 Solo Exhibition Dynamic Teaser Animation.",
@@ -101,15 +101,18 @@ const nextWork = works[(safeIndex + 1) % works.length];
   </head>
   <body class="min-h-screen w-full relative select-none md:overflow-hidden bg-white">
     
-    <!-- 1. 頂部固定導覽 -->
-    <header class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
-      <div class="pointer-events-auto flex items-center md:block gap-2">
+    <!-- 1. 側邊導覽 (桌機版將 BUGBUG 移至左側垂直置中) -->
+    <header class="fixed top-0 left-0 w-full md:w-64 h-auto md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
+      
+      <!-- 手機版置頂/桌機版靠左居中 -->
+      <div class="pointer-events-auto flex items-center md:my-auto">
         <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity">
           BUGBUG
         </a>
       </div>
 
-      <div class="text-[10px] tracking-widest text-zinc-400 uppercase pointer-events-auto">
+      <!-- 底部年份標示 -->
+      <div class="text-[10px] tracking-widest text-zinc-400 uppercase pointer-events-auto md:absolute md:bottom-12 md:left-12">
         <p class="hidden md:block md:mb-1">{work.year}</p>
         <p class="text-zinc-800 font-medium hidden md:block">INDEX</p>
       </div>
