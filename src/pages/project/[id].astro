@@ -57,7 +57,7 @@ export const works = [
     title: "3aple5ire",
     category: "Illustration",
     year: "2023",
-    image: "/images/3aple5ire.png",
+    image: "/images/3aple5ire.jpg", // 👈 已更正為 .jpg
     desc: "Digital Canvas Light Layering.",
     credit: "BUGBUG",
     role: "Illustrator",
@@ -101,7 +101,7 @@ const nextWork = works[(safeIndex + 1) % works.length];
   </head>
   <body class="min-h-screen w-full relative select-none md:overflow-hidden bg-white">
     
-    <!-- 1. 側邊導覽 (帶有對應 #id 錨點返回首頁) -->
+    <!-- 1. 側邊導覽 -->
     <header class="fixed top-0 left-0 w-full md:w-64 h-auto md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
       
       <div class="pointer-events-auto flex items-center md:my-auto">

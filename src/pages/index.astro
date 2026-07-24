@@ -4,7 +4,7 @@ const works = [
   {
     id: "show",
     title: "2how",
-    category: "Illustration", // 👈 已更新為 Illustration
+    category: "Illustration",
     year: "2025",
     image: "/images/2how.png",
     position: "object-[center_15%]"
@@ -38,7 +38,7 @@ const works = [
     title: "3aple5ire",
     category: "Illustration",
     year: "2023",
-    image: "/images/3aple5ire.jpg",
+    image: "/images/3aple5ire.jpg", // 👈 已更正為 .jpg
     position: "object-[75%_20%]"
   },
   {
@@ -108,6 +108,7 @@ import { ClientRouter } from 'astro:transitions';
     >
       {works.map((item, index) => (
         <article 
+          id={`work-${item.id}`}
           class="gallery-item h-[65vh] w-[45vw] shrink-0 flex flex-col justify-center items-center px-4 relative cursor-pointer transition-all duration-500"
           data-title={item.title}
           data-year={item.year}
@@ -184,6 +185,17 @@ import { ClientRouter } from 'astro:transitions';
           });
         }
 
+        function scrollToElement(targetEl: HTMLElement, smooth = true) {
+          const viewportCenter = window.innerWidth / 2;
+          const rect = targetEl.getBoundingClientRect();
+          const targetOffset = container.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
+
+          container.scrollTo({
+            left: Math.max(0, targetOffset),
+            behavior: smooth ? 'smooth' : 'auto'
+          });
+        }
+
         let snapTimeout: number | undefined;
         function snapToCenter() {
           const viewportCenter = window.innerWidth / 2;
@@ -204,13 +216,7 @@ import { ClientRouter } from 'astro:transitions';
           });
 
           if (closestItem && container) {
-            const rect = (closestItem as HTMLElement).getBoundingClientRect();
-            const targetOffset = container.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
-            
-            container.scrollTo({
-              left: targetOffset,
-              behavior: 'smooth'
-            });
+            scrollToElement(closestItem, true);
           }
         }
 
@@ -250,7 +256,22 @@ import { ClientRouter } from 'astro:transitions';
           });
         });
 
-        updateSlices();
+        // 檢查 Hash 錨點並精確捲動
+        const hash = window.location.hash;
+        if (hash) {
+          const targetId = hash.substring(1);
+          const targetItem = document.getElementById(targetId);
+          if (targetItem) {
+            requestAnimationFrame(() => {
+              scrollToElement(targetItem, false);
+              updateSlices();
+            });
+          } else {
+            updateSlices();
+          }
+        } else {
+          updateSlices();
+        }
       }
 
       document.addEventListener('astro:page-load', initGallery);
