@@ -1,14 +1,20 @@
 ---
-// 作品完整資料
-const works = [
+import '../../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+
+// 作品完整資料庫
+export const works = [
   {
     id: "show",
     title: "2how",
     category: "Animation",
     year: "2025",
     image: "https://lh3.googleusercontent.com/pw/AP1GczOx4pheGlHW9CyVn6Ru6sqXAz4P6gF3zyBGVJ-dxGrZtAEakinhN4SXvsvATMBV-hp0W7eHGNWHtjGgozu9DHkg2zJHXhxNFcQBlDO74KeNjTzj8NOhMZU82u3DmrCxOFOpn66ML4_9RfA9Fpsm-MSUzw=w676-h956-s-no-gm?authuser=0",
+    desc: "1999 Solo Exhibition Dynamic Teaser Animation.",
+    credit: "BUGBUG",
+    role: "Director / Animator",
     video: "/video/2how.mp4",
-    position: "object-[center_15%]"
+    subImages: []
   },
   {
     id: "butterfly",
@@ -16,8 +22,11 @@ const works = [
     category: "Illustration",
     year: "2025",
     image: "https://lh3.googleusercontent.com/pw/AP1GczMjuBS1_2UNNocBqJQoiYyqLMEHUylE91IDWjgMA_MBIUWIwqi31ihGZCSlmHzn5mbqia1hBey2DjO_anZebkc8A_JR8-KfB-Z7axoz1Vr33g48iwFlhVzg37h5sw7LKMFIgXWofeZwCgXU8JKiQomQSw=w956-h956-s-no-gm?authuser=0",
+    desc: "Butterfly effect dynamic color study.",
+    credit: "BUGBUG",
+    role: "Illustrator",
     video: "/video/8utter5ly.mp4",
-    position: "object-center"
+    subImages: []
   },
   {
     id: "valkyrie",
@@ -25,8 +34,11 @@ const works = [
     category: "Illustration",
     year: "2023",
     image: "https://lh3.googleusercontent.com/pw/AP1GczMSzbw-ak-L2HTP9K98r_4MZESew6W77fpYleG271_x4Ka5PAPPEBGfnsoDuEtaQ6xxP6XcqKDvJE8gwNeO8OwxQ8V2RaQU6_MCJJQnl9VGRfBj_QcbS5Jv67z2QKzgFgrlrPzWNr02Ui8ZRTGGEIbBfQ=w676-h956-s-no-gm?authuser=0",
+    desc: "Valkyrie Character Concept & Flame FX.",
+    credit: "BUGBUG",
+    role: "Illustrator",
     video: "/video/valkyrie.mp4",
-    position: "object-[center_15%]"
+    subImages: []
   },
   {
     id: "fa",
@@ -34,8 +46,11 @@ const works = [
     category: "Illustration",
     year: "2023",
     image: "https://lh3.googleusercontent.com/pw/AP1GczOwsBqnI5GWxEJSHdBoMIdC9_1NGFSRn1h4Ofxr0fIdoYsckNRwLnPFViasySTNOl3xpXxAye1j6XH9WPgqzMV-BVyPa0mHWWNVO95z9tg3V__7vHYO3YWB9_P0kWD_-ZIhQcMCWkD66UrAp_2uU-vShw=w956-h956-s-no-gm?authuser=0",
+    desc: "Flora & Chroma composition.",
+    credit: "BUGBUG",
+    role: "Illustrator",
     video: "/video/FA.mp4",
-    position: "object-center"
+    subImages: []
   },
   {
     id: "3aple5ire",
@@ -43,7 +58,10 @@ const works = [
     category: "Illustration",
     year: "2023",
     image: "https://lh3.googleusercontent.com/pw/AP1GczOS47bP7rlyQG_zyZaXMo6yqCGxlGPT35TNKgG_MVSrkpGGMvKZkVNnkrPPeFW2wFI1FtS1kI0ztFDk4Wh4CQIZwXmS02vtTQ89yageDi_M8EbJBJtegEn4S0y_HDG90LzRkkT4OhzMtTKLWoMTzxx-Og=w789-h956-s-no-gm?authuser=0",
-    position: "object-[68%_20%]" // 👈 這張 3aple5ire 精準露臉！
+    desc: "Digital Canvas Light Layering.",
+    credit: "BUGBUG",
+    role: "Illustrator",
+    subImages: []
   },
   {
     id: "2tar-walker",
@@ -51,98 +69,128 @@ const works = [
     category: "Illustration",
     year: "2023",
     image: "https://lh3.googleusercontent.com/pw/AP1GczNfUrDSE8QFz8uqfdesN-UCpvzn2IlD4_U1HBIx4ggMdMD29Sb30vedtW_usfjxYH0De53SZw9CnnpeSqCk1fBOKe9IMrwZcFaOvRGYk8scGqT_l3W0MlwZxiQ_gTW3hhwC-ib7EsFlPA0fGIKAhMQCcg=w368-h956-s-no-gm?authuser=0",
+    desc: "Urban Walker Monochrome & Cyan accent.",
+    credit: "BUGBUG",
+    role: "Illustrator",
     video: "/video/2TAR Walker.mp4",
-    position: "object-[center_15%]"
+    subImages: []
   }
 ];
 
-const categories = ["Illustration", "Animation", "Artwork", "Exhibition"];
-const getCount = (cat: string) => works.filter(w => w.category.toLowerCase() === cat.toLowerCase()).length;
+export function getStaticPaths() {
+  return works.map(w => ({ params: { id: w.id } }));
+}
 
-import '../styles/global.css';
-import { ClientRouter } from 'astro:transitions';
+const { id } = Astro.params;
+
+const currentIndex = works.findIndex(w => w.id === id);
+const safeIndex = currentIndex !== -1 ? currentIndex : 0;
+const work = works[safeIndex];
+
+const prevWork = works[(safeIndex - 1 + works.length) % works.length];
+const nextWork = works[(safeIndex + 1) % works.length];
 ---
 
-<html lang="zh-TW" class="h-full overflow-hidden bg-white text-zinc-900 font-['Inter'] antialiased">
+<html lang="zh-TW" class="min-h-full bg-white text-zinc-900 font-['Inter'] antialiased">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BUGBUG Portfolio</title>
+    <title>{work.title} | BUGBUG</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
     <ClientRouter />
   </head>
-  <body class="h-full w-full overflow-hidden relative select-none">
+  <body class="min-h-screen w-full relative select-none md:overflow-hidden bg-white">
     
-    <!-- 左側側邊欄 -->
-    <aside class="fixed top-0 left-0 h-full w-48 z-40 p-8 md:p-12 flex flex-col justify-between pointer-events-none">
-      <div class="pointer-events-auto">
-        <ul class="text-[11px] tracking-widest text-zinc-400 space-y-1.5 uppercase">
-          {categories.map(cat => (
-            <li class="flex justify-between items-center cursor-pointer hover:text-zinc-900 transition-colors category-btn" data-category={cat}>
-              <span>{cat}</span> 
-              <span class="text-zinc-800 font-medium">{String(getCount(cat)).padStart(2, '0')}</span>
-            </li>
-          ))}
-        </ul>
-        <h1 class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 mt-16 cursor-pointer filter-all" data-category="ALL">
+    <!-- 1. 頂部固定導覽 -->
+    <header class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
+      <div class="pointer-events-auto flex items-center md:block gap-2">
+        <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity">
           BUGBUG
-        </h1>
+        </a>
       </div>
 
       <div class="text-[10px] tracking-widest text-zinc-400 uppercase pointer-events-auto">
-        <p class="cursor-pointer filter-all hover:text-zinc-900 transition-colors" data-category="ALL">
-          All Works <span class="text-zinc-800 ml-2 font-medium">{String(works.length).padStart(2, '0')}</span>
-        </p>
-      </div>
-    </aside>
-
-    <!-- 頂部中央動態標題 -->
-    <header class="fixed top-8 left-1/2 -translate-x-1/2 z-40 text-center pointer-events-none hidden md:block">
-      <div id="active-title" class="text-xs tracking-widest uppercase font-medium text-zinc-800 transition-all duration-300">
-        {works[0].title}, {works[0].year}
-      </div>
-      <div id="active-category" class="text-[10px] tracking-widest uppercase text-zinc-400 mt-1 transition-all duration-300">
-        {works[0].category}
+        <p class="hidden md:block md:mb-1">{work.year}</p>
+        <p class="text-zinc-800 font-medium hidden md:block">INDEX</p>
       </div>
     </header>
 
-    <!-- 畫廊核心 -->
+    <!-- 2. 中央畫布 -->
     <main 
-      id="gallery-container" 
-      class="h-full w-full overflow-y-hidden overflow-x-scroll flex flex-row items-center px-[35vw]"
+      id="project-canvas"
+      class="w-full min-h-screen md:h-full pt-20 pb-32 md:p-0 md:overflow-y-hidden md:overflow-x-scroll flex flex-col md:flex-row items-center justify-start md:pl-72 md:pr-[30vw] gap-16 md:gap-28"
     >
-      {works.map((item, index) => (
-        <article 
-          class="gallery-item h-[65vh] w-[45vw] shrink-0 flex flex-col justify-center items-center px-4 relative cursor-pointer transition-all duration-500"
-          data-title={item.title}
-          data-year={item.year}
-          data-category={item.category}
-        >
-          <a href={`/project/${item.id}`} class="slice-wrapper block w-full h-full relative overflow-hidden shadow-2xl transition-all duration-300 ease-out bg-black/5">
-            {item.video ? (
-              <video 
-                src={item.video} 
-                autoplay 
-                loop 
-                muted 
-                playsinline
-                preload="auto"
-                class={`w-full h-full object-cover pointer-events-none ${item.position || 'object-center'}`}
-              />
-            ) : (
-              <img 
-                src={item.image} 
-                alt={item.title}
-                loading={index === 0 ? "eager" : "lazy"}
-                class={`w-full h-full object-cover pointer-events-none ${item.position || 'object-center'}`}
-              />
-            )}
-          </a>
-        </article>
-      ))}
+      
+      <!-- [區塊 A] Hero 作品主圖 -->
+      <section class="project-sec w-full md:w-auto shrink-0 flex flex-col items-center justify-center px-4 md:p-0 md:h-screen">
+        <div class="w-full max-h-[70vh] md:max-h-none md:h-full flex items-center justify-center overflow-hidden">
+          <img 
+            src={work.image} 
+            alt={work.title}
+            class="yoneyama-expand-img w-full h-full object-contain block"
+          />
+        </div>
+        
+        <!-- 手機版作品標題與年份 -->
+        <div class="mt-8 text-center md:hidden fade-in-info">
+          <h1 class="text-sm tracking-[0.2em] uppercase font-medium text-zinc-900">{work.title}</h1>
+          <p class="text-[10px] tracking-widest uppercase text-zinc-400 mt-1">{work.year}, {work.category}</p>
+        </div>
+      </section>
+
+      <!-- [區塊 B] 影片區塊 -->
+      {work.video && (
+        <section class="project-sec w-full md:w-[70vw] md:max-w-6xl shrink-0 h-[40vh] md:h-[85vh] flex items-center justify-center bg-black/5 overflow-hidden shadow-2xl border border-zinc-100 px-4 md:p-0 my-auto">
+          <video 
+            src={work.video} 
+            autoplay 
+            loop 
+            muted 
+            playsinline
+            preload="auto"
+            class="w-full h-full object-contain pointer-events-none"
+          >
+          </video>
+        </section>
+      )}
+
+      <!-- [區塊 C] Credit 署名區塊 -->
+      <section class="project-sec w-full md:w-80 shrink-0 border-t md:border-t-0 md:border-l border-zinc-100 pt-12 md:pt-0 px-8 md:p-0 md:pl-16 my-auto flex flex-col justify-center gap-10 md:h-[60vh] fade-in-info">
+        <div class="space-y-3">
+          <span class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 block">Description</span>
+          <p class="text-xs tracking-wider text-zinc-600 leading-relaxed font-light">
+            {work.desc}
+          </p>
+        </div>
+
+        <div class="space-y-4 pt-6 border-t border-zinc-100">
+          <div>
+            <p class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 mb-1">{work.role || "Illustrator"}</p>
+            <p class="text-xs tracking-widest uppercase font-medium text-zinc-900">{work.credit}</p>
+          </div>
+          <div>
+            <p class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 mb-1">Year</p>
+            <p class="text-xs tracking-widest uppercase font-medium text-zinc-900">{work.year}</p>
+          </div>
+        </div>
+      </section>
+
     </main>
 
-    <style>
+    <!-- 3. 底部選單 -->
+    <footer class="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:right-12 md:translate-x-0 z-40 text-[10px] tracking-widest uppercase text-zinc-400 flex gap-6 pointer-events-auto bg-white/90 backdrop-blur-md px-6 py-2.5 rounded-full border border-zinc-200/60 shadow-md">
+      <a href={`/project/${prevWork.id}`} class="hover:text-zinc-900 transition-colors">
+        Prev
+      </a>
+      <a href="/" class="hover:text-zinc-900 transition-colors text-zinc-800 font-medium">
+        Index
+      </a>
+      <a href={`/project/${nextWork.id}`} class="hover:text-zinc-900 transition-colors">
+        Next
+      </a>
+    </footer>
+
+    <style is:global>
       main::-webkit-scrollbar {
         display: none;
       }
@@ -150,133 +198,111 @@ import { ClientRouter } from 'astro:transitions';
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
+
+      .yoneyama-expand-img {
+        animation: yoneyamaExpand 650ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        transform-origin: center center;
+      }
+
+      @keyframes yoneyamaExpand {
+        0% {
+          clip-path: inset(0 35% 0 35%);
+          transform: scale(0.92);
+          opacity: 0.5;
+        }
+        100% {
+          clip-path: inset(0 0 0 0);
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .fade-in-info {
+        animation: fadeInText 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes fadeInText {
+        0% {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     </style>
 
     <script>
-      function initGallery() {
-        const container = document.getElementById('gallery-container');
-        if (!container) return;
+      function handleVideoPlay() {
+        const canvas = document.getElementById('project-canvas');
+        if (!canvas) return;
 
-        const videos = container.querySelectorAll('video');
-        videos.forEach(video => {
+        const videos = canvas.querySelectorAll('video');
+        
+        videos.forEach((video) => {
           video.muted = true;
-          video.play().catch(() => {});
-        });
+          video.playsInline = true;
+          video.load();
 
-        const items = document.querySelectorAll('.gallery-item');
-        const activeTitle = document.getElementById('active-title');
-        const activeCategory = document.getElementById('active-category');
+          const playVideo = () => {
+            video.play().catch(() => {});
+          };
 
-        function updateSlices() {
-          const viewportCenter = window.innerWidth / 2;
-
-          items.forEach((item) => {
-            const el = item as HTMLElement;
-            if (el.style.display === 'none') return;
-
-            const wrapper = el.querySelector('.slice-wrapper') as HTMLElement;
-            if (!wrapper) return;
-
-            const rect = el.getBoundingClientRect();
-            const itemCenter = rect.left + rect.width / 2;
-            
-            const distanceFromCenter = Math.abs(itemCenter - viewportCenter);
-            const maxDistance = window.innerWidth * 0.45;
-            
-            let progress = 1 - (distanceFromCenter / maxDistance);
-            progress = Math.max(0, Math.min(1, progress));
-
-            const scaleX = 0.28 + (progress * 0.72);
-            const opacity = 0.35 + (progress * 0.65);
-
-            wrapper.style.transform = `scaleX(${scaleX.toFixed(3)})`;
-            wrapper.style.opacity = opacity.toFixed(3);
-
-            if (progress > 0.65) {
-              const title = el.getAttribute('data-title');
-              const year = el.getAttribute('data-year');
-              const cat = el.getAttribute('data-category');
-              
-              if (title && activeTitle) {
-                activeTitle.textContent = `${title}, ${year}`;
-              }
-              if (cat && activeCategory) {
-                activeCategory.textContent = cat;
-              }
-            }
-          });
-        }
-
-        let snapTimeout: number | undefined;
-        function snapToCenter() {
-          const viewportCenter = window.innerWidth / 2;
-          let closestItem: HTMLElement | null = null;
-          let minDistance = Infinity;
-
-          items.forEach(item => {
-            const el = item as HTMLElement;
-            if (el.style.display === 'none') return;
-            const rect = el.getBoundingClientRect();
-            const itemCenter = rect.left + rect.width / 2;
-            const dist = Math.abs(itemCenter - viewportCenter);
-
-            if (dist < minDistance) {
-              minDistance = dist;
-              closestItem = el;
-            }
-          });
-
-          if (closestItem && container) {
-            const rect = (closestItem as HTMLElement).getBoundingClientRect();
-            const targetOffset = container.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
-            
-            container.scrollTo({
-              left: targetOffset,
-              behavior: 'smooth'
-            });
+          if (video.readyState >= 2) {
+            playVideo();
+          } else {
+            video.addEventListener('canplay', playVideo, { once: true });
           }
-        }
-
-        container.addEventListener('wheel', (e) => {
-          const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-          container.scrollLeft += delta * 0.85;
-          e.preventDefault();
-
-          clearTimeout(snapTimeout);
-          snapTimeout = window.setTimeout(snapToCenter, 400);
-        }, { passive: false });
-
-        container.addEventListener('scroll', () => requestAnimationFrame(updateSlices), { passive: true });
-
-        function filterCategory(selectedCategory: string) {
-          items.forEach(item => {
-            const el = item as HTMLElement;
-            const itemCat = el.getAttribute('data-category') || '';
-
-            if (selectedCategory === 'ALL' || itemCat.toLowerCase() === selectedCategory.toLowerCase()) {
-              el.style.display = 'flex';
-            } else {
-              el.style.display = 'none';
-            }
-          });
-
-          if (container) container.scrollLeft = 0;
-          updateSlices();
-        }
-
-        const navFilters = document.querySelectorAll('.category-btn, .filter-all');
-        navFilters.forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            const target = e.currentTarget as HTMLElement;
-            const cat = target.getAttribute('data-category') || 'ALL';
-            filterCategory(cat);
-          });
         });
 
-        updateSlices();
+        if (window.innerWidth >= 768) {
+          let snapTimeout: number | undefined;
+
+          const snapToCenter = () => {
+            if (!canvas || window.innerWidth < 768) return;
+            const viewportCenter = window.innerWidth / 2;
+            const sections = canvas.querySelectorAll('.project-sec');
+            let closestSection: HTMLElement | null = null;
+            let minDistance = Infinity;
+
+            sections.forEach(sec => {
+              const el = sec as HTMLElement;
+              const rect = el.getBoundingClientRect();
+              const sectionCenter = rect.left + rect.width / 2;
+              const dist = Math.abs(sectionCenter - viewportCenter);
+
+              if (dist < minDistance) {
+                minDistance = dist;
+                closestSection = el;
+              }
+            });
+
+            if (closestSection) {
+              const rect = (closestSection as HTMLElement).getBoundingClientRect();
+              const targetOffset = canvas.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
+              
+              canvas.scrollTo({
+                left: Math.max(0, targetOffset),
+                behavior: 'smooth'
+              });
+            }
+          };
+
+          window.addEventListener('wheel', (e) => {
+            if (!canvas || window.innerWidth < 768) return;
+            const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+            if (delta === 0) return;
+
+            canvas.scrollLeft += delta * 1.5;
+            clearTimeout(snapTimeout);
+            snapTimeout = window.setTimeout(snapToCenter, 350);
+          }, { passive: true });
+        }
       }
 
-      document.addEventListener('astro:page-load', initGallery);
+      document.addEventListener('astro:page-load', handleVideoPlay);
+      document.addEventListener('astro:after-swap', handleVideoPlay);
     </script>
 
   </body>
