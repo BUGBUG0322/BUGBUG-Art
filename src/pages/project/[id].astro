@@ -101,6 +101,7 @@ const nextWork = works[(safeIndex + 1) % works.length];
   </head>
   <body class="min-h-screen w-full relative select-none md:overflow-hidden bg-white">
     
+    <!-- 1. 頂部固定導覽 -->
     <header class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/70 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
       <div class="pointer-events-auto flex items-center md:block gap-2">
         <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity">
@@ -114,27 +115,30 @@ const nextWork = works[(safeIndex + 1) % works.length];
       </div>
     </header>
 
+    <!-- 2. 中央畫布 -->
     <main 
       id="project-canvas"
       class="w-full min-h-screen md:h-full pt-20 pb-32 md:p-0 md:overflow-y-hidden md:overflow-x-scroll flex flex-col md:flex-row items-center justify-start md:pl-72 md:pr-[30vw] gap-16 md:gap-28"
     >
       
+      <!-- [區塊 A] Hero 作品主圖：移除 transition:name 避免硬混圖，改用精準高質感廣角展開 -->
       <section class="project-sec w-full md:w-auto shrink-0 flex flex-col items-center justify-center px-4 md:p-0 md:h-screen">
         <div class="w-full max-h-[70vh] md:max-h-none md:h-full flex items-center justify-center overflow-hidden">
           <img 
             src={work.image} 
             alt={work.title}
-            transition:name={`work-img-${work.id}`}
-            class="hero-image w-full h-full object-contain block transition-transform duration-700 ease-out"
+            class="yoneyama-expand-img w-full h-full object-contain block"
           />
         </div>
         
-        <div class="mt-8 text-center md:hidden">
+        <!-- 手機版作品標題與年份 -->
+        <div class="mt-8 text-center md:hidden fade-in-info">
           <h1 class="text-sm tracking-[0.2em] uppercase font-medium text-zinc-900">{work.title}</h1>
           <p class="text-[10px] tracking-widest uppercase text-zinc-400 mt-1">{work.year}, {work.category}</p>
         </div>
       </section>
 
+      <!-- [區塊 B] 影片區塊 -->
       {work.video && (
         <section class="project-sec w-full md:w-[70vw] md:max-w-6xl shrink-0 h-[40vh] md:h-[85vh] flex items-center justify-center bg-black/5 overflow-hidden shadow-2xl border border-zinc-100 px-4 md:p-0 my-auto">
           <video 
@@ -150,7 +154,8 @@ const nextWork = works[(safeIndex + 1) % works.length];
         </section>
       )}
 
-      <section class="project-sec w-full md:w-80 shrink-0 border-t md:border-t-0 md:border-l border-zinc-100 pt-12 md:pt-0 px-8 md:p-0 md:pl-16 my-auto flex flex-col justify-center gap-10 md:h-[60vh]">
+      <!-- [區塊 C] Credit 署名區塊 -->
+      <section class="project-sec w-full md:w-80 shrink-0 border-t md:border-t-0 md:border-l border-zinc-100 pt-12 md:pt-0 px-8 md:p-0 md:pl-16 my-auto flex flex-col justify-center gap-10 md:h-[60vh] fade-in-info">
         <div class="space-y-3">
           <span class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 block">Description</span>
           <p class="text-xs tracking-wider text-zinc-600 leading-relaxed font-light">
@@ -172,6 +177,7 @@ const nextWork = works[(safeIndex + 1) % works.length];
 
     </main>
 
+    <!-- 3. 底部選單 -->
     <footer class="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:right-12 md:translate-x-0 z-40 text-[10px] tracking-widest uppercase text-zinc-400 flex gap-6 pointer-events-auto bg-white/90 backdrop-blur-md px-6 py-2.5 rounded-full border border-zinc-200/60 shadow-md">
       <a href={`/project/${prevWork.id}`} class="hover:text-zinc-900 transition-colors">
         Prev
@@ -184,6 +190,7 @@ const nextWork = works[(safeIndex + 1) % works.length];
       </a>
     </footer>
 
+    <!-- ⭐ 米山舞風格：切片感平滑動態展開（ScaleX & ClipPath） -->
     <style is:global>
       main::-webkit-scrollbar {
         display: none;
@@ -193,25 +200,38 @@ const nextWork = works[(safeIndex + 1) % works.length];
         scrollbar-width: none;
       }
 
-      /* 轉場動畫優化：淡入淡出加微幅放大，取代生硬暴增 */
-      ::view-transition-old(root),
-      ::view-transition-new(root) {
-        animation-duration: 400ms;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      /* 圖片展開動畫：模仿首頁 Slice 卡片直接橫向展開為全圖 */
+      .yoneyama-expand-img {
+        animation: yoneyamaExpand 650ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        transform-origin: center center;
       }
 
-      .hero-image {
-        animation: smoothScaleIn 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-
-      @keyframes smoothScaleIn {
-        from {
-          opacity: 0.6;
-          transform: scale(0.96);
+      @keyframes yoneyamaExpand {
+        0% {
+          clip-path: inset(0 35% 0 35%);
+          transform: scale(0.92);
+          opacity: 0.5;
         }
-        to {
-          opacity: 1;
+        100% {
+          clip-path: inset(0 0 0 0);
           transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* 文字漸顯，等圖片展開後優雅帶出 */
+      .fade-in-info {
+        animation: fadeInText 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes fadeInText {
+        0% {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
         }
       }
     </style>
