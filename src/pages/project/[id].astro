@@ -1,0 +1,267 @@
+---
+import '../../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+
+// 作品完整資料庫
+export const works = [
+  {
+    id: "show",
+    title: "2how",
+    category: "Animation",
+    year: "2025",
+    image: "https://lh3.googleusercontent.com/pw/AP1GczOx4pheGlHW9CyVn6Ru6sqXAz4P6gF3zyBGVJ-dxGrZtAEakinhN4SXvsvATMBV-hp0W7eHGNWHtjGgozu9DHkg2zJHXhxNFcQBlDO74KeNjTzj8NOhMZU82u3DmrCxOFOpn66ML4_9RfA9Fpsm-MSUzw=w676-h956-s-no-gm?authuser=0",
+    desc: "2025 Solo Exhibition Dynamic Teaser Animation.",
+    credit: "BUGBUG",
+    role: "Director / Animator",
+    video: "/video/2how.mp4",
+    subImages: []
+  },
+  {
+    id: "butterfly",
+    title: "8utter.5ly",
+    category: "Illustration",
+    year: "2025",
+    image: "https://lh3.googleusercontent.com/pw/AP1GczMjuBS1_2UNNocBqJQoiYyqLMEHUylE91IDWjgMA_MBIUWIwqi31ihGZCSlmHzn5mbqia1hBey2DjO_anZebkc8A_JR8-KfB-Z7axoz1Vr33g48iwFlhVzg37h5sw7LKMFIgXWofeZwCgXU8JKiQomQSw=w956-h956-s-no-gm?authuser=0",
+    desc: "Butterfly effect dynamic color study.",
+    credit: "BUGBUG",
+    role: "Illustrator",
+    video: "/video/8utter5ly.mp4",
+    subImages: []
+  },
+  {
+    id: "valkyrie",
+    title: "Valkyrie",
+    category: "Illustration",
+    year: "2023",
+    image: "https://lh3.googleusercontent.com/pw/AP1GczMSzbw-ak-L2HTP9K98r_4MZESew6W77fpYleG271_x4Ka5PAPPEBGfnsoDuEtaQ6xxP6XcqKDvJE8gwNeO8OwxQ8V2RaQU6_MCJJQnl9VGRfBj_QcbS5Jv67z2QKzgFgrlrPzWNr02Ui8ZRTGGEIbBfQ=w676-h956-s-no-gm?authuser=0",
+    desc: "Valkyrie Character Concept & Flame FX.",
+    credit: "BUGBUG",
+    role: "Illustrator",
+    video: "/video/valkyrie.mp4",
+    subImages: []
+  },
+  {
+    id: "fa",
+    title: "Fa",
+    category: "Illustration",
+    year: "2023",
+    image: "https://lh3.googleusercontent.com/pw/AP1GczOwsBqnI5GWxEJSHdBoMIdC9_1NGFSRn1h4Ofxr0fIdoYsckNRwLnPFViasySTNOl3xpXxAye1j6XH9WPgqzMV-BVyPa0mHWWNVO95z9tg3V__7vHYO3YWB9_P0kWD_-ZIhQcMCWkD66UrAp_2uU-vShw=w956-h956-s-no-gm?authuser=0",
+    desc: "Flora & Chroma composition.",
+    credit: "BUGBUG",
+    role: "Illustrator",
+    video: "/video/FA.mp4",
+    subImages: []
+  },
+  {
+    id: "3aple5ire",
+    title: "3aple5ire",
+    category: "Illustration",
+    year: "2023",
+    image: "https://lh3.googleusercontent.com/pw/AP1GczOS47bP7rlyQG_zyZaXMo6yqCGxlGPT35TNKgG_MVSrkpGGMvKZkVNnkrPPeFW2wFI1FtS1kI0ztFDk4Wh4CQIZwXmS02vtTQ89yageDi_M8EbJBJtegEn4S0y_HDG90LzRkkT4OhzMtTKLWoMTzxx-Og=w789-h956-s-no-gm?authuser=0",
+    desc: "Digital Canvas Light Layering.",
+    credit: "BUGBUG",
+    role: "Illustrator",
+    subImages: []
+  },
+  {
+    id: "2tar-walker",
+    title: "2TAR Walker",
+    category: "Illustration",
+    year: "2023",
+    image: "https://lh3.googleusercontent.com/pw/AP1GczNfUrDSE8QFz8uqfdesN-UCpvzn2IlD4_U1HBIx4ggMdMD29Sb30vedtW_usfjxYH0De53SZw9CnnpeSqCk1fBOKe9IMrwZcFaOvRGYk8scGqT_l3W0MlwZxiQ_gTW3hhwC-ib7EsFlPA0fGIKAhMQCcg=w368-h956-s-no-gm?authuser=0",
+    desc: "Urban Walker Monochrome & Cyan accent.",
+    credit: "BUGBUG",
+    role: "Illustrator",
+    video: "/video/2TAR Walker.mp4",
+    subImages: []
+  }
+];
+
+export function getStaticPaths() {
+  return works.map(w => ({ params: { id: w.id } }));
+}
+
+const { id } = Astro.params;
+
+const currentIndex = works.findIndex(w => w.id === id);
+const safeIndex = currentIndex !== -1 ? currentIndex : 0;
+const work = works[safeIndex];
+
+const prevWork = works[(safeIndex - 1 + works.length) % works.length];
+const nextWork = works[(safeIndex + 1) % works.length];
+---
+
+<html lang="zh-TW" class="h-full overflow-hidden bg-white text-zinc-900 font-['Inter'] antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{work.title} | BUGBUG</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+    <ClientRouter />
+  </head>
+  <body class="h-full w-full overflow-hidden relative select-none">
+    
+    <!-- 1. 左側固定導覽列 -->
+    <aside class="fixed top-0 left-0 h-full w-64 z-40 p-8 md:p-12 flex flex-col justify-between pointer-events-none">
+      <div class="pointer-events-auto">
+        <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity">
+          BUGBUG
+        </a>
+        <h2 class="text-xs tracking-widest uppercase text-zinc-800 font-medium mt-8">
+          {work.title}
+        </h2>
+        <p class="text-[10px] tracking-widest uppercase text-zinc-400 mt-1">
+          {work.category}
+        </p>
+      </div>
+
+      <div class="text-[10px] tracking-widest text-zinc-400 uppercase pointer-events-auto">
+        <p class="mb-1">{work.year}</p>
+        <p class="text-zinc-800 font-medium">INDEX</p>
+      </div>
+    </aside>
+
+    <!-- 2. 橫向畫布：已移除會造成 JS 滾動卡死的 scroll-smooth -->
+    <main 
+      id="project-canvas"
+      class="h-full w-full overflow-y-hidden overflow-x-scroll flex items-center pl-64 pr-[35vw] gap-16 md:gap-24"
+    >
+      
+      <!-- [區塊 A] Hero 大圖 -->
+      <section class="project-sec shrink-0 h-[80vh] flex items-center justify-center">
+        <img 
+          src={work.image} 
+          alt={work.title}
+          transition:name={`work-img-${work.id}`}
+          class="max-h-full max-w-[70vw] object-contain shadow-2xl rounded-sm block"
+        />
+      </section>
+
+      <!-- [區塊 B] 影片播放區塊 -->
+      {work.video && (
+        <section class="project-sec shrink-0 h-[70vh] w-[60vw] max-w-4xl flex items-center justify-center bg-black/5 rounded-sm overflow-hidden shadow-2xl relative border border-zinc-100">
+          <video 
+            src={work.video} 
+            autoplay 
+            loop 
+            muted 
+            playsinline
+            preload="auto"
+            class="w-full h-full object-contain pointer-events-none"
+          >
+          </video>
+        </section>
+      )}
+
+      <!-- [區塊 C] Credit 署名區塊 -->
+      <section class="project-sec shrink-0 w-80 h-[65vh] flex flex-col justify-between border-l border-zinc-100 pl-12 py-6 my-auto">
+        <div class="space-y-4">
+          <span class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 block">Description</span>
+          <p class="text-xs tracking-wider text-zinc-600 leading-relaxed font-light">
+            {work.desc}
+          </p>
+        </div>
+
+        <div class="space-y-6 pt-12 border-t border-zinc-100">
+          <div>
+            <p class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 mb-1">{work.role || "Illustrator"}</p>
+            <p class="text-xs tracking-widest uppercase font-medium text-zinc-900">{work.credit}</p>
+          </div>
+          <div>
+            <p class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 mb-1">Year</p>
+            <p class="text-xs tracking-widest uppercase font-medium text-zinc-900">{work.year}</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 3. 右下角切換控制列 -->
+    <footer class="fixed bottom-8 right-12 z-40 text-[10px] tracking-widest uppercase text-zinc-400 flex gap-6 pointer-events-auto bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-zinc-100/50 shadow-sm">
+      <a href={`/project/${prevWork.id}`} class="hover:text-zinc-900 transition-colors">
+        Prev
+      </a>
+      <a href="/" class="hover:text-zinc-900 transition-colors text-zinc-800 font-medium">
+        Index
+      </a>
+      <a href={`/project/${nextWork.id}`} class="hover:text-zinc-900 transition-colors">
+        Next
+      </a>
+    </footer>
+
+    <style>
+      main::-webkit-scrollbar {
+        display: none;
+      }
+      main {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+
+    <!-- ⭐ 簡潔強大的橫向滾動與對齊腳本 -->
+    <script>
+      function setupCanvas() {
+        const canvas = document.getElementById('project-canvas');
+        if (!canvas) return;
+
+        // 靜音播放影片
+        const video = canvas.querySelector('video');
+        if (video) {
+          video.muted = true;
+          video.play().catch(() => {});
+        }
+
+        let snapTimeout: number | undefined;
+
+        // 磁吸對齊
+        function snapToCenter() {
+          if (!canvas) return;
+          const viewportCenter = window.innerWidth / 2;
+          const sections = canvas.querySelectorAll('.project-sec');
+          let closestSection: HTMLElement | null = null;
+          let minDistance = Infinity;
+
+          sections.forEach(sec => {
+            const el = sec as HTMLElement;
+            const rect = el.getBoundingClientRect();
+            const sectionCenter = rect.left + rect.width / 2;
+            const dist = Math.abs(sectionCenter - viewportCenter);
+
+            if (dist < minDistance) {
+              minDistance = dist;
+              closestSection = el;
+            }
+          });
+
+          if (closestSection) {
+            const rect = (closestSection as HTMLElement).getBoundingClientRect();
+            const targetOffset = canvas.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
+            
+            canvas.scrollTo({
+              left: Math.max(0, targetOffset),
+              behavior: 'smooth'
+            });
+          }
+        }
+
+        // 滾輪處理
+        window.addEventListener('wheel', (e) => {
+          if (!canvas) return;
+          
+          const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+          if (delta === 0) return;
+
+          // 直手感推進
+          canvas.scrollLeft += delta * 1.5;
+
+          clearTimeout(snapTimeout);
+          snapTimeout = window.setTimeout(snapToCenter, 350);
+        }, { passive: true });
+      }
+
+      document.addEventListener('astro:page-load', setupCanvas);
+    </script>
+
+  </body>
+</html>
