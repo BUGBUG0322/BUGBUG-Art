@@ -101,43 +101,43 @@ const nextWork = works[(safeIndex + 1) % works.length];
   </head>
   <body class="min-h-screen w-full relative select-none md:overflow-hidden bg-white">
     
-    <!-- 1. 頂部 / 左側固定選單 -->
-    <header class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/80 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none">
+    <!-- 1. 頂部懸浮選單：透視背景，純文字呈現，不產生白條 -->
+    <header class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start pointer-events-none drop-shadow-sm">
       <div class="pointer-events-auto flex items-center md:block gap-2">
         <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity">
           BUGBUG
         </a>
-        <span class="text-xs text-zinc-300 md:hidden">/</span>
-        <h2 class="text-xs tracking-widest uppercase text-zinc-500 md:text-zinc-800 font-medium md:mt-8">
+        <span class="text-xs text-zinc-400 md:hidden">/</span>
+        <h2 class="text-xs tracking-widest uppercase text-zinc-700 md:text-zinc-800 font-medium md:mt-8">
           {work.title}
         </h2>
       </div>
 
-      <div class="text-[10px] tracking-widest text-zinc-400 uppercase pointer-events-auto">
+      <div class="text-[10px] tracking-widest text-zinc-500 uppercase pointer-events-auto">
         <p class="md:mb-1">{work.year}</p>
         <p class="text-zinc-800 font-medium hidden md:block">INDEX</p>
       </div>
     </header>
 
-    <!-- 2. 中央畫布：手機版留出上下邊距 (pt-16 pb-20)，確保完全不擋圖 -->
+    <!-- 2. 中央畫布：100% 極致滿版（貼頂貼底） -->
     <main 
       id="project-canvas"
       class="w-full min-h-screen md:h-full md:overflow-y-hidden md:overflow-x-scroll flex flex-col md:flex-row items-center justify-start md:pl-72 md:pr-[30vw] gap-12 md:gap-28"
     >
       
-      <!-- [區塊 A] Hero 大圖（手機版 pt-16 pb-20 避開上下列） -->
-      <section class="project-sec w-full md:w-auto shrink-0 h-screen flex items-center justify-center pt-16 pb-20 md:p-0">
+      <!-- [區塊 A] Hero 大圖（手機與電腦皆 100% 滿版無邊界） -->
+      <section class="project-sec w-full md:w-auto shrink-0 h-screen flex items-center justify-center">
         <img 
           src={work.image} 
           alt={work.title}
           transition:name={`work-img-${work.id}`}
-          class="w-full h-full object-contain md:max-w-[80vw] block"
+          class="w-full h-full object-cover md:object-contain md:max-w-[80vw] block"
         />
       </section>
 
       <!-- [區塊 B] 影片播放區塊 -->
       {work.video && (
-        <section class="project-sec w-full md:w-[65vw] md:max-w-5xl shrink-0 h-[50vh] md:h-[80vh] flex items-center justify-center bg-black/5 overflow-hidden shadow-2xl border border-zinc-100 my-auto">
+        <section class="project-sec w-full md:w-[65vw] md:max-w-5xl shrink-0 h-[60vh] md:h-[80vh] flex items-center justify-center bg-black/5 overflow-hidden shadow-2xl border border-zinc-100 my-auto">
           <video 
             src={work.video} 
             autoplay 
