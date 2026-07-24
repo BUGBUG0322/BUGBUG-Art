@@ -38,7 +38,7 @@ const works = [
     title: "3aple5ire",
     category: "Illustration",
     year: "2023",
-    image: "/images/3aple5ire.jpg", // 👈 已更正為 .jpg
+    image: "/images/3aple5ire.jpg",
     position: "object-[75%_20%]"
   },
   {
@@ -186,6 +186,8 @@ import { ClientRouter } from 'astro:transitions';
         }
 
         function scrollToElement(targetEl: HTMLElement, smooth = true) {
+          if (!container) return;
+
           const viewportCenter = window.innerWidth / 2;
           const rect = targetEl.getBoundingClientRect();
           const targetOffset = container.scrollLeft + (rect.left + rect.width / 2) - viewportCenter;
@@ -256,7 +258,7 @@ import { ClientRouter } from 'astro:transitions';
           });
         });
 
-        // 檢查 Hash 錨點並精確捲動
+        // 檢查 Hash 錨點並自動對齊
         const hash = window.location.hash;
         if (hash) {
           const targetId = hash.substring(1);
