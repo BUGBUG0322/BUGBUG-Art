@@ -88,15 +88,15 @@ import { ClientRouter } from 'astro:transitions';
       </div>
     </aside>
 
-    <!-- 頂部中央動態標題 -->
-    <header class="fixed top-8 left-1/2 -translate-x-1/2 z-40 text-center pointer-events-none">
-      <div id="active-title" class="text-xs tracking-widest uppercase font-medium text-zinc-800 transition-all duration-300">
-        {works[0].title}, {works[0].year}
-      </div>
-      <div id="active-category" class="text-[10px] tracking-widest uppercase text-zinc-400 mt-1 transition-all duration-300">
-        {works[0].category}
-      </div>
-    </header>
+    <!-- 頂部中央動態標題：在手機版隱藏，避免與左上角重疊 -->
+<header class="fixed top-8 left-1/2 -translate-x-1/2 z-40 text-center pointer-events-none hidden md:block">
+  <div id="active-title" class="text-xs tracking-widest uppercase font-medium text-zinc-800 transition-all duration-300">
+    {works[0].title}, {works[0].year}
+  </div>
+  <div id="active-category" class="text-[10px] tracking-widest uppercase text-zinc-400 mt-1 transition-all duration-300">
+    {works[0].category}
+  </div>
+</header>
 
     <!-- 畫廊核心 -->
     <main 

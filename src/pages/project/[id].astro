@@ -10,7 +10,7 @@ export const works = [
     category: "Animation",
     year: "2025",
     image: "https://lh3.googleusercontent.com/pw/AP1GczOx4pheGlHW9CyVn6Ru6sqXAz4P6gF3zyBGVJ-dxGrZtAEakinhN4SXvsvATMBV-hp0W7eHGNWHtjGgozu9DHkg2zJHXhxNFcQBlDO74KeNjTzj8NOhMZU82u3DmrCxOFOpn66ML4_9RfA9Fpsm-MSUzw=w676-h956-s-no-gm?authuser=0",
-    desc: "2025 Solo Exhibition Dynamic Teaser Animation.",
+    desc: "1999 Solo Exhibition Dynamic Teaser Animation.",
     credit: "BUGBUG",
     role: "Director / Animator",
     video: "/video/2how.mp4",
@@ -25,7 +25,6 @@ export const works = [
     desc: "Butterfly effect dynamic color study.",
     credit: "BUGBUG",
     role: "Illustrator",
-    video: "/video/8utter5ly.mp4",
     subImages: []
   },
   {
@@ -37,7 +36,6 @@ export const works = [
     desc: "Valkyrie Character Concept & Flame FX.",
     credit: "BUGBUG",
     role: "Illustrator",
-    video: "/video/valkyrie.mp4",
     subImages: []
   },
   {
@@ -49,7 +47,6 @@ export const works = [
     desc: "Flora & Chroma composition.",
     credit: "BUGBUG",
     role: "Illustrator",
-    video: "/video/FA.mp4",
     subImages: []
   },
   {
@@ -72,7 +69,6 @@ export const works = [
     desc: "Urban Walker Monochrome & Cyan accent.",
     credit: "BUGBUG",
     role: "Illustrator",
-    video: "/video/2TAR Walker.mp4",
     subImages: []
   }
 ];
@@ -91,7 +87,7 @@ const prevWork = works[(safeIndex - 1 + works.length) % works.length];
 const nextWork = works[(safeIndex + 1) % works.length];
 ---
 
-<html lang="zh-TW" class="h-full overflow-hidden bg-white text-zinc-900 font-['Inter'] antialiased">
+<html lang="zh-TW" class="h-full bg-white text-zinc-900 font-['Inter'] antialiased">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -99,47 +95,49 @@ const nextWork = works[(safeIndex + 1) % works.length];
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
     <ClientRouter />
   </head>
-  <body class="h-full w-full overflow-hidden relative select-none">
+  <body class="min-h-full w-full relative select-none md:overflow-hidden">
     
-    <!-- 1. 左側固定導覽列 -->
-    <aside class="fixed top-0 left-0 h-full w-64 z-40 p-8 md:p-12 flex flex-col justify-between pointer-events-none">
-      <div class="pointer-events-auto">
-        <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity">
-          BUGBUG
-        </a>
-        <h2 class="text-xs tracking-widest uppercase text-zinc-800 font-medium mt-8">
-          {work.title}
-        </h2>
-        <p class="text-[10px] tracking-widest uppercase text-zinc-400 mt-1">
-          {work.category}
-        </p>
-      </div>
+    <!-- 1. 導覽列：手機頂部固定（優化重疊），電腦版左側固定 -->
+<aside class="fixed top-0 left-0 w-full md:w-64 md:h-full z-40 p-5 md:p-12 flex flex-row md:flex-col justify-between items-center md:items-start bg-white/90 md:bg-transparent backdrop-blur-md md:backdrop-blur-none pointer-events-none border-b border-zinc-100 md:border-b-0">
+  <div class="pointer-events-auto flex items-center md:block gap-3">
+    <a href="/" class="text-xs tracking-[0.25em] font-medium uppercase text-zinc-900 block hover:opacity-50 transition-opacity shrink-0">
+      BUGBUG
+    </a>
+    <!-- 手機版用斜線分隔，避免換行與中央字體重疊 -->
+    <span class="text-xs text-zinc-300 md:hidden">/</span>
+    <h2 class="text-xs tracking-widest uppercase text-zinc-600 md:text-zinc-800 font-medium md:mt-8 truncate max-w-[150px] sm:max-w-none">
+      {work.title}
+    </h2>
+    <p class="text-[10px] tracking-widest uppercase text-zinc-400 mt-0.5 hidden md:block">
+      {work.category}
+    </p>
+  </div>
 
-      <div class="text-[10px] tracking-widest text-zinc-400 uppercase pointer-events-auto">
-        <p class="mb-1">{work.year}</p>
-        <p class="text-zinc-800 font-medium">INDEX</p>
-      </div>
-    </aside>
+  <div class="text-[10px] tracking-widest text-zinc-400 uppercase pointer-events-auto hidden md:block">
+    <p class="mb-1">{work.year}</p>
+    <p class="text-zinc-800 font-medium">INDEX</p>
+  </div>
+</aside>
 
-    <!-- 2. 橫向畫布：已移除會造成 JS 滾動卡死的 scroll-smooth -->
+    <!-- 2. 響應式畫布：手機垂直滾動、電腦橫向滾動 -->
     <main 
       id="project-canvas"
-      class="h-full w-full overflow-y-hidden overflow-x-scroll flex items-center pl-64 pr-[35vw] gap-16 md:gap-24"
+      class="w-full pt-24 pb-28 px-6 md:py-0 md:h-full md:overflow-y-hidden md:overflow-x-scroll flex flex-col md:flex-row items-center md:pl-64 md:pr-[35vw] gap-12 md:gap-24"
     >
       
       <!-- [區塊 A] Hero 大圖 -->
-      <section class="project-sec shrink-0 h-[80vh] flex items-center justify-center">
+      <section class="project-sec w-full md:w-auto shrink-0 md:h-[80vh] flex items-center justify-center">
         <img 
           src={work.image} 
           alt={work.title}
           transition:name={`work-img-${work.id}`}
-          class="max-h-full max-w-[70vw] object-contain shadow-2xl rounded-sm block"
+          class="w-full max-h-[70vh] md:max-h-full md:max-w-[70vw] object-contain shadow-2xl rounded-sm block"
         />
       </section>
 
       <!-- [區塊 B] 影片播放區塊 -->
       {work.video && (
-        <section class="project-sec shrink-0 h-[70vh] w-[60vw] max-w-4xl flex items-center justify-center bg-black/5 rounded-sm overflow-hidden shadow-2xl relative border border-zinc-100">
+        <section class="project-sec w-full md:w-[60vw] md:max-w-4xl shrink-0 h-[40vh] md:h-[70vh] flex items-center justify-center bg-black/5 rounded-sm overflow-hidden shadow-2xl relative border border-zinc-100 my-4 md:my-0">
           <video 
             src={work.video} 
             autoplay 
@@ -154,15 +152,15 @@ const nextWork = works[(safeIndex + 1) % works.length];
       )}
 
       <!-- [區塊 C] Credit 署名區塊 -->
-      <section class="project-sec shrink-0 w-80 h-[65vh] flex flex-col justify-between border-l border-zinc-100 pl-12 py-6 my-auto">
-        <div class="space-y-4">
+      <section class="project-sec w-full md:w-80 shrink-0 md:h-[65vh] flex flex-col justify-between border-t md:border-t-0 md:border-l border-zinc-100 pt-8 md:pt-0 md:pl-12 py-0 md:py-6 my-auto">
+        <div class="space-y-3 md:space-y-4">
           <span class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 block">Description</span>
           <p class="text-xs tracking-wider text-zinc-600 leading-relaxed font-light">
             {work.desc}
           </p>
         </div>
 
-        <div class="space-y-6 pt-12 border-t border-zinc-100">
+        <div class="space-y-4 md:space-y-6 pt-8 md:pt-12 border-t border-zinc-100 mt-8 md:mt-0">
           <div>
             <p class="text-[10px] tracking-[0.2em] uppercase text-zinc-400 mb-1">{work.role || "Illustrator"}</p>
             <p class="text-xs tracking-widest uppercase font-medium text-zinc-900">{work.credit}</p>
@@ -176,8 +174,8 @@ const nextWork = works[(safeIndex + 1) % works.length];
 
     </main>
 
-    <!-- 3. 右下角切換控制列 -->
-    <footer class="fixed bottom-8 right-12 z-40 text-[10px] tracking-widest uppercase text-zinc-400 flex gap-6 pointer-events-auto bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-zinc-100/50 shadow-sm">
+    <!-- 3. 右下角切換控制列（手機底部固定居中） -->
+    <footer class="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:right-12 md:translate-x-0 z-40 text-[10px] tracking-widest uppercase text-zinc-400 flex gap-6 pointer-events-auto bg-white/90 backdrop-blur-md px-6 py-2.5 rounded-full border border-zinc-200/60 shadow-lg">
       <a href={`/project/${prevWork.id}`} class="hover:text-zinc-900 transition-colors">
         Prev
       </a>
@@ -199,24 +197,25 @@ const nextWork = works[(safeIndex + 1) % works.length];
       }
     </style>
 
-    <!-- ⭐ 簡潔強大的橫向滾動與對齊腳本 -->
+    <!-- JS 橫向滾動邏輯（僅在電腦版生效，不干擾手機直向滑動） -->
     <script>
       function setupCanvas() {
         const canvas = document.getElementById('project-canvas');
         if (!canvas) return;
 
-        // 靜音播放影片
         const video = canvas.querySelector('video');
         if (video) {
           video.muted = true;
           video.play().catch(() => {});
         }
 
+        // 僅在桌面大螢幕啟用橫向磁吸與滾輪監聽
+        if (window.innerWidth < 768) return;
+
         let snapTimeout: number | undefined;
 
-        // 磁吸對齊
         function snapToCenter() {
-          if (!canvas) return;
+          if (!canvas || window.innerWidth < 768) return;
           const viewportCenter = window.innerWidth / 2;
           const sections = canvas.querySelectorAll('.project-sec');
           let closestSection: HTMLElement | null = null;
@@ -245,14 +244,12 @@ const nextWork = works[(safeIndex + 1) % works.length];
           }
         }
 
-        // 滾輪處理
         window.addEventListener('wheel', (e) => {
-          if (!canvas) return;
+          if (!canvas || window.innerWidth < 768) return;
           
           const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
           if (delta === 0) return;
 
-          // 直手感推進
           canvas.scrollLeft += delta * 1.5;
 
           clearTimeout(snapTimeout);
